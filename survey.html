@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Investor Research Survey</title>
+<style>
+:root{--bg:#f7f8fa;--card:#fff;--tx:#1b2430;--mut:#5d6b7b;--ac:#1f3864;--acl:#e6ecf7;--bd:#d6dce5;--ok:#1d7a4d;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#12161c;--card:#1b222b;--tx:#e8edf3;--mut:#9aa8b8;--ac:#8fb0ee;--acl:#243049;--bd:#33404f;--ok:#5fcf95;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#12161c;--card:#1b222b;--tx:#e8edf3;--mut:#9aa8b8;--ac:#8fb0ee;--acl:#243049;--bd:#33404f;--ok:#5fcf95;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:Arial,Helvetica,sans-serif;line-height:1.5}
+main{max-width:680px;margin:0 auto;padding:20px 16px 48px}
+h1{font-size:24px;margin:8px 0 6px;color:var(--ac)}h2{font-size:18px;margin:0 0 4px}
+p{margin:0 0 12px;color:var(--mut)}
+.cat{display:block;width:100%;text-align:left;background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:12px;cursor:pointer;color:var(--tx);font:inherit}
+.cat:hover,.cat:focus-visible{border-color:var(--ac);outline:2px solid var(--acl)}
+.cat b{display:block;color:var(--ac);margin-bottom:2px}.cat span{color:var(--mut);font-size:14px}
+.q{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin-bottom:12px}
+.q label.t{display:block;font-weight:bold;margin-bottom:8px}
+.opt{display:flex;gap:8px;align-items:flex-start;padding:6px 0;cursor:pointer}
+.opt input{margin-top:4px}
+textarea,input[type=text]{width:100%;font:inherit;padding:10px;border:1px solid var(--bd);border-radius:8px;background:var(--bg);color:var(--tx)}
+textarea{min-height:80px;resize:vertical}
+.scale{display:flex;gap:8px;flex-wrap:wrap}
+.scale label{flex:1;min-width:48px;text-align:center;border:1px solid var(--bd);border-radius:8px;padding:8px 0;cursor:pointer}
+.scale input{display:none}.scale input:checked+span{font-weight:bold;color:var(--ac)}
+.scale label:has(input:checked){background:var(--acl);border-color:var(--ac)}
+.hint{font-size:12px;color:var(--mut);display:flex;justify-content:space-between;margin-top:4px}
+button.p{background:var(--ac);color:var(--bg);border:0;border-radius:8px;padding:12px 20px;font:inherit;font-weight:bold;cursor:pointer}
+button.s{background:none;border:1px solid var(--bd);color:var(--tx);border-radius:8px;padding:10px 16px;font:inherit;cursor:pointer}
+.bar{height:6px;background:var(--acl);border-radius:3px;margin:8px 0 16px}.bar i{display:block;height:100%;background:var(--ac);border-radius:3px}
+.err{color:#c0392b;font-size:14px;margin:8px 0}.ok{color:var(--ok);font-weight:bold}
+.scroll{overflow-x:auto}table{border-collapse:collapse;font-size:13px;min-width:600px}td,th{border:1px solid var(--bd);padding:6px;text-align:left;vertical-align:top}
+pre{white-space:pre-wrap;background:var(--card);border:1px solid var(--bd);border-radius:8px;padding:10px;font-size:13px}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.saving{color:var(--mut);font-size:14px;margin:8px 0}
+</style></head><body><main id="app"></main>
+<script>
+const COMMON=[
+ {id:"invested",h:"H4",t:"Have you ever invested in stocks or mutual funds?",k:"single",o:["Never, but I want to start","Tried once or twice","I invest occasionally","I invest regularly"],req:1},
+ {id:"goal",h:"H8, H9",t:"What do you mainly want from company research?",k:"single",o:["Judge the right time and price to buy","Broaden my perspective beyond what I already follow"],req:1,showIf:a=>a.invested&&a.invested!=="Never, but I want to start"},
+ {id:"where",h:"H1, H2",t:"Where do you get information about companies and investing today? (tick all that apply)",k:"multi",o:["YouTube or Instagram","Friends or family","Telegram or WhatsApp groups","Broker or analyst reports","Company annual reports","ChatGPT or other AI","Nowhere yet"]},
+ {id:"report",h:"H2",t:"Have you ever opened a company's annual report or a research report?",k:"single",o:["Never","Opened one, couldn't understand it","Read some parts","I read them regularly"]},
+ {id:"diff",h:"H2, H3",t:"What is your biggest difficulty with company information?",k:"single",o:["Jargon, I don't understand it","It's too long","I don't know what to look for","I can't tell if it's reliable or biased","I don't find it difficult"]},
+ {id:"learnpref",h:"H5",t:"To understand a company report, which would you prefer?",k:"single",o:["Read it on my own","A video where an industry professional walks me through it","A short AI summary","The report plus an expert video, with help when I'm stuck"]},
+ {id:"video",h:"H6",t:"Would a video walkthrough by an industry professional make you more likely to read the actual report?",k:"single",o:["Yes, much more","Somewhat","No, I'd just watch the video","No, I'd rather read directly"]}
+];
+const SHARED=[
+ {id:"sources",h:"H1",t:"Last time you researched a company, how many different places did you check?",k:"single",o:["I didn't research","1","2-3","4-5","6 or more"]},
+ {id:"check",h:"H3",t:"How do you check whether a report or recommendation is reliable? (tick all that apply)",k:"multi",o:["Who wrote it and how they earn","Their past track record","Compare with another source","Check the numbers myself","I don't check"]},
+ {id:"takeaways",h:"H8",t:"After an expert explains a report, what would you rather get?",k:"single",o:["One clear verdict","Several takeaways (bull view, bear view, risks) so I decide","Both"]},
+ {id:"aistuck",h:"H7",t:"When you're stuck on a report, what do you do today? (tick all that apply)",k:"multi",o:["Ask a friend or family","Search Google or YouTube","Ask ChatGPT or other AI","Ask an adviser","Skip it and move on"]}
+];
+const PRICE=[
+ {id:"spend",h:"H10, H11",t:"Today, how much do you spend per month on investing tools, courses or paid advice?",k:"single",o:["Nothing","Under ₹500","₹500-2,000","Over ₹2,000"]},
+ {id:"price",h:"H10",t:"Which monthly price would you actually pay for a platform like this (not just say)?",k:"single",o:["Nothing, only if free","₹99","₹199","₹299","₹499","More than ₹499"],req:1},
+ {id:"start",h:"H12",t:"How would you start?",k:"single",o:["Free first, upgrade if it helps me","Pay right away if it looks good","Only if fully free"]},
+ {id:"wait",h:"H10",t:"The platform is not built yet. Want to be on the early-access list?",k:"single",o:["Yes","Maybe","No"],req:1},
+ {id:"contact",t:"Optional: WhatsApp number or email for early access and a 10-minute chat.",k:"line"}
+];
+const CATS={
+ beginner:{name:"Beginner",line:"you haven't invested yet and the technical side is holding you back",
+  qs:[{id:"b_stop",h:"H4",t:"What is the MAIN thing holding you back?",k:"single",o:["The terms and jargon confuse me","I don't know how to read information about a company","I don't know how to choose which company","I'm afraid of losing money by misjudging","I don't know how to open or use an account","I have no one to ask"]},
+      {id:"b_explain",h:"H4",t:"If you opened a company report, what would you most need explained? (tick all that apply)",k:"multi",o:["Financial terms","Profit and loss numbers","Whether the company is actually good","The risks","How it compares to other companies"]},
+      {id:"b_ready",h:"H4, H7",t:"What would make you confident enough to make your first investment?",k:"single",o:["Understanding a company's report myself","Following a step-by-step learning path","Starting with a very small amount","Advice from someone I trust","Seeing others' results"]},
+      {id:"b_way",h:"H5, H7",t:"How would you prefer to learn?",k:"single",o:["The report plus an expert video, step by step","Asking an AI whenever I'm stuck","Short daily lessons","Someone just telling me what to buy"]},
+      {id:"b_course",h:"H7",t:"Have you ever started an investing course or video series?",k:"single",o:["Finished it","Started but didn't finish","Never started one"]},
+      {id:"b_ai",h:"H7",t:"If you got stuck on a report, what would you want from an AI companion? (tick all that apply)",k:"multi",o:["Explain terms in simple language","Show the page in the report it is based on","Say when it is unsure","Point me back to the right part of the report","I'd rather ask a person"]},
+      {id:"b_take",h:"H8",t:"After an expert explains a report, what would you rather get?",k:"single",o:["One clear verdict","Several takeaways (bull view, bear view, risks) so I decide","Both"]}]},
+ seeker:{name:"Timing/price seeker",line:"you invest and want to judge the right time and price",
+  qs:[{id:"s_rely",h:"H8",t:"To judge whether a price is right, what do you rely on today? (tick all that apply)",k:"multi",o:["Tips or news","Charts","Valuation ratios (like P/E)","Analyst target prices","Gut feeling","An adviser's call"]},
+      {id:"s_pick",h:"H8",t:"Which would you actually use?",k:"single",o:["A target price from an analyst","A tool showing how analysts reached their price, where I can change the assumptions","Both","Neither"]},
+      {id:"s_call",h:"H8",t:"If a platform never said 'buy' or 'sell' but taught you to judge price yourself, would that be enough?",k:"single",o:["Yes, enough","I'd still want a clear call","Depends"]},...SHARED]},
+ seasoned:{name:"Seasoned",line:"you're experienced and want to broaden your perspective",
+  qs:[{id:"e_sector",h:"H9",t:"In the last month, how many reports from sectors outside your usual ones did you read?",k:"single",o:["None","1-2","3-5","6 or more"]},
+      {id:"e_bear",h:"H9",t:"How often do you read a strong bear case against a stock you own?",k:"single",o:["Never","Rarely","Sometimes","Always"]},
+      {id:"e_weekly",h:"H9",t:"Would you check a bull-vs-bear comparison of reports every week?",k:"single",o:["Yes, weekly","Occasionally","No"]},...SHARED]}
+};
+const HT={};[...COMMON,...SHARED,...PRICE,...Object.values(CATS).flatMap(c=>c.qs)].forEach(q=>{if(q.h)HT[q.id]=q.h});
+const app=document.getElementById("app");
+let cat=null,ans={};
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const routeCat=a=>a.invested==="Never, but I want to start"?"beginner":(a.goal&&a.goal.startsWith("Judge")?"seeker":"seasoned");
+
+// ── ENDPOINT ─────────────────────────────────────────────────
+// Paste your Google Apps Script Web App URL here after deploying.
+// Example: "https://script.google.com/macros/s/AKfyc.../exec"
+const ENDPOINT = "https://script.google.com/macros/s/AKfycbxA6hIv1d-LwbaIFtbNQp4Fwcnrd7qp531MQIAeiPezfIFkPgsiSKIhL_bdD0YFvZRj/exec";
+
+// ── SAVE FUNCTION ────────────────────────────────────────────
+async function save(rec) {
+  if (!ENDPOINT) return false;
+  try {
+    // Google Apps Script requires no-cors mode; it still processes the POST.
+    await fetch(ENDPOINT, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain" }, // no-cors only allows simple headers
+      body: JSON.stringify(rec),
+    });
+    // no-cors gives an opaque response — we assume success if no exception thrown
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+function landing(){
+ cat=null;ans={};
+ app.innerHTML=`<h1>Investor Research Survey</h1>
+ <p>I'm a student building a learning tool that helps people understand company reports and make their own investment decisions, through the report itself, an expert video walkthrough, and an AI helper when you're stuck. This takes about 4 minutes, all taps. There are no right answers; honest experience is what helps most. Responses are used for my project only.</p>
+ <div class="row"><button class="p" id="go">Start</button></div>`;
+ document.getElementById("go").onclick=()=>{stageCommon();scrollTo(0,0)};
+}
+function field(q){
+ const t=`<label class="t">${esc(q.t)}${q.req?" *":""}</label>`;
+ if(q.k==="line")return `<div class="q" data-id="${q.id}">${t}<input type="text" name="${q.id}"></div>`;
+ if(q.k==="scale")return `<div class="q" data-id="${q.id}">${t}<div class="scale">${[1,2,3,4,5].map(n=>`<label><input type="radio" name="${q.id}" value="${n}"><span>${n}</span></label>`).join("")}</div><div class="hint"><span>1 = ${esc(q.lo)}</span><span>5 = ${esc(q.hi)}</span></div></div>`;
+ const type=q.k==="multi"?"checkbox":"radio";
+ return `<div class="q" data-id="${q.id}">${t}${q.o.map(o=>`<label class="opt"><input type="${type}" name="${q.id}" value="${esc(o)}"><span>${esc(o)}</span></label>`).join("")}</div>`;
+}
+function page({title,note="",list,step,label,onBack,onNext}){
+ app.innerHTML=`<h1>${title}</h1>${note}<div class="bar"><i id="pb" style="width:0"></i></div>
+ <form id="f" novalidate>${list.map(field).join("")}<div class="err" id="err"></div>
+ <div class="row">${onBack?'<button type="button" class="s" id="back">Back</button>':""}<button type="submit" class="p">${label}</button></div></form>`;
+ const f=document.getElementById("f");
+ list.forEach(q=>{const v=ans[q.id];if(v==null||v==="")return;
+  f.querySelectorAll(`[name=${q.id}]`).forEach(el=>{if(el.type==="checkbox")el.checked=v.includes(el.value);else if(el.type==="radio")el.checked=el.value===v;else el.value=v})});
+ const read=()=>{const o={};list.forEach(q=>{const els=f.querySelectorAll(`[name=${q.id}]`);if(q.k==="multi")o[q.id]=[...els].filter(x=>x.checked).map(x=>x.value);else if(q.k==="line")o[q.id]=els[0].value.trim();else{const x=[...els].find(x=>x.checked);o[q.id]=x?x.value:""}});return o};
+ const vis=q=>!q.showIf||q.showIf({...ans,...read()});
+ const upd=()=>{const o=read();let n=0,m=0;list.forEach(q=>{const el=f.querySelector(`[data-id=${q.id}]`);const v=vis(q);el.style.display=v?"":"none";if(v){m++;if(Array.isArray(o[q.id])?o[q.id].length:o[q.id])n++}});
+  document.getElementById("pb").style.width=Math.round(((step+(m?n/m:0))/3)*100)+"%"};
+ f.addEventListener("input",upd);f.addEventListener("change",upd);upd();
+ if(onBack)document.getElementById("back").onclick=onBack;
+ f.onsubmit=e=>{e.preventDefault();const o=read();
+  if(list.some(q=>vis(q)&&q.req&&(Array.isArray(o[q.id])?!o[q.id].length:!o[q.id]))){document.getElementById("err").textContent="Please answer the questions marked *.";return}
+  list.forEach(q=>{if(vis(q))ans[q.id]=o[q.id];else delete ans[q.id]});onNext();scrollTo(0,0)};
+}
+function stageCommon(){
+ page({title:"A few quick questions",list:COMMON,step:0,label:"Next",onBack:landing,onNext:()=>{cat=routeCat(ans);stageCat()}});
+}
+function stageCat(){
+ const c=CATS[cat];
+ const sw=Object.entries(CATS).filter(([k])=>k!==cat).map(([k,v])=>`<button type="button" class="s sw" data-k="${k}" style="margin:4px 8px 4px 0;padding:6px 10px;font-size:13px">${esc(v.name)}</button>`).join("");
+ page({title:`Questions for you: ${esc(c.name)}`,note:`<p>Based on your answers, ${esc(c.line)}. Not quite right? Switch: ${sw}</p>`,list:c.qs,step:1,label:"Next",onBack:stageCommon,onNext:stagePrice});
+ app.querySelectorAll(".sw").forEach(b=>b.onclick=()=>{cat=b.dataset.k;stageCat();scrollTo(0,0)});
+}
+function stagePrice(){
+ page({title:"Last few questions",list:PRICE,step:2,label:"Submit",onBack:stageCat,onNext:async()=>{
+  app.innerHTML=`<h1>Submitting…</h1><p class="saving">Saving your response, please wait…</p>`;
+  const lists=[...COMMON,...CATS[cat].qs,...PRICE],a={},qs={};
+  lists.forEach(q=>{if(ans[q.id]!=null){a[q.id]=ans[q.id];qs[q.id]=q.t}});
+  const rec={category:cat,time:new Date().toISOString(),answers:a,questions:qs};
+  done(rec,await save(rec))}});
+}
+
+function done(rec,saved){
+ const txt=`Survey response (${CATS[rec.category].name})\n`+Object.entries(rec.answers).map(([k,v])=>`${rec.questions[k]}\n-> ${Array.isArray(v)?v.join(", "):v||"(skipped)"}`).join("\n\n");
+ app.innerHTML=`<h1>Thank you!</h1>${saved?`<p class="ok">✓ Your response has been saved to Google Sheets.</p>`:`<p>Your answers couldn't be saved automatically${ENDPOINT?"":" (no endpoint configured)"}. Please copy them and send to the person who shared this link.</p><pre id="t">${esc(txt)}</pre><div class="row"><button class="p" id="cp">Copy my answers</button></div>`}
+ <p style="margin-top:16px">Your input will directly shape the project. I really appreciate your time.</p>`;
+ const b=document.getElementById("cp");if(b)b.onclick=async()=>{try{await navigator.clipboard.writeText(txt);b.textContent="Copied ✓"}catch(e){const r=document.createRange();r.selectNodeContents(document.getElementById("t"));getSelection().removeAllRanges();getSelection().addRange(r)}};
+}
+function route(){landing()}
+route();
+</script></body></html>
