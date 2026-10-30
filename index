@@ -8,602 +8,554 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-/* ── TOKENS ─────────────────────────────────────────── */
+
+/* ── TOKENS ── */
 :root {
-  --bg:       #0d1117;
-  --surface:  #161b22;
-  --card:     #1c2333;
-  --card2:    #21293a;
-  --border:   #30363d;
-  --border2:  #3d4a5c;
-  --tx:       #e6edf3;
-  --tx2:      #8b949e;
-  --tx3:      #6e7681;
-  --ac:       #58a6ff;
-  --ac2:      #79c0ff;
-  --acg:      linear-gradient(135deg,#4c8ef7,#a371f7);
-  --acg2:     linear-gradient(135deg,#79c0ff,#d2a8ff);
-  --ok:       #3fb950;
-  --err:      #f85149;
-  --warn:     #d29922;
-  --r:        14px;
-  --r2:       10px;
-  --shadow:   0 8px 32px rgba(0,0,0,.45);
-  --shadow2:  0 2px 8px rgba(0,0,0,.3);
-  --glow:     0 0 20px rgba(88,166,255,.2);
-  color-scheme: dark;
+  --green:      #16a34a;
+  --green-l:    #22c55e;
+  --green-bg:   #f0fdf4;
+  --green-mid:  #dcfce7;
+  --blue:       #2563eb;
+  --blue-l:     #3b82f6;
+  --blue-bg:    #eff6ff;
+  --blue-mid:   #dbeafe;
+  --white:      #ffffff;
+  --off:        #f8fafc;
+  --border:     #e2e8f0;
+  --border2:    #cbd5e1;
+  --tx:         #0f172a;
+  --tx2:        #475569;
+  --tx3:        #94a3b8;
+  --err:        #dc2626;
+  --r:          16px;
+  --r2:         10px;
+  --shadow-sm:  0 1px 3px rgba(0,0,0,.08), 0 1px 2px rgba(0,0,0,.04);
+  --shadow:     0 4px 16px rgba(0,0,0,.07), 0 1px 4px rgba(0,0,0,.04);
+  --shadow-lg:  0 12px 40px rgba(0,0,0,.1), 0 2px 8px rgba(0,0,0,.04);
 }
 
-/* ── RESET & BASE ───────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-html {
-  scroll-behavior: smooth;
-  scroll-padding-top: env(safe-area-inset-top, 0px);
-}
+html { scroll-behavior: smooth; }
 
 body {
   font-family: 'Inter', system-ui, sans-serif;
-  background: var(--bg);
+  background: var(--off);
   color: var(--tx);
   line-height: 1.6;
   min-height: 100vh;
-  overflow-x: hidden;
-  padding: env(safe-area-inset-top,0px) env(safe-area-inset-right,0px) env(safe-area-inset-bottom,0px) env(safe-area-inset-left,0px);
 }
 
-/* ── ANIMATED BACKGROUND ────────────────────────────── */
-body::before {
-  content: '';
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(ellipse 80% 50% at 20% 10%, rgba(88,166,255,.07) 0%, transparent 60%),
-    radial-gradient(ellipse 60% 40% at 80% 80%, rgba(163,113,247,.07) 0%, transparent 60%),
-    radial-gradient(ellipse 40% 30% at 60% 30%, rgba(63,185,80,.04) 0%, transparent 50%);
-  pointer-events: none;
-  z-index: 0;
-}
-
+/* ── LAYOUT ── */
 #app {
-  position: relative;
-  z-index: 1;
-  max-width: 700px;
+  max-width: 640px;
   margin: 0 auto;
-  padding: 28px 18px 80px;
+  padding: 32px 18px 80px;
 }
 
-/* ── PAGE TRANSITION ────────────────────────────────── */
-.page-enter {
-  animation: pageIn .35s cubic-bezier(.22,.68,0,1.2) both;
+/* ── PAGE ANIMATION ── */
+.page {
+  animation: fadeUp .3s ease both;
 }
-@keyframes pageIn {
-  from { opacity: 0; transform: translateY(24px) scale(.98); }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
   to   { opacity: 1; transform: none; }
 }
 
-/* ── LANDING HERO ───────────────────────────────────── */
+/* ═══════════════════════════════════════
+   LANDING
+═══════════════════════════════════════ */
 .hero {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 48px 36px 40px;
+  box-shadow: var(--shadow-lg);
   text-align: center;
-  padding: 60px 0 40px;
-}
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  background: rgba(88,166,255,.12);
-  border: 1px solid rgba(88,166,255,.25);
-  border-radius: 100px;
-  padding: 5px 14px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--ac2);
-  letter-spacing: .04em;
-  text-transform: uppercase;
-  margin-bottom: 24px;
-}
-.hero-badge span { font-size: 14px; }
-.hero h1 {
-  font-size: clamp(28px, 5vw, 42px);
-  font-weight: 800;
-  line-height: 1.15;
-  background: var(--acg2);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 18px;
-}
-.hero p {
-  max-width: 520px;
-  margin: 0 auto 32px;
-  color: var(--tx2);
-  font-size: 15px;
-  line-height: 1.7;
-}
-.hero-stats {
-  display: flex;
-  justify-content: center;
-  gap: 32px;
-  margin-bottom: 36px;
-  flex-wrap: wrap;
-}
-.stat {
-  text-align: center;
-}
-.stat strong {
-  display: block;
-  font-size: 22px;
-  font-weight: 700;
-  color: var(--tx);
-}
-.stat span {
-  font-size: 12px;
-  color: var(--tx3);
-  text-transform: uppercase;
-  letter-spacing: .06em;
-}
-
-/* ── BUTTONS ────────────────────────────────────────── */
-.btn-primary {
   position: relative;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  background: var(--acg);
-  color: #fff;
-  border: none;
-  border-radius: 100px;
-  padding: 14px 32px;
-  font: 600 15px 'Inter', sans-serif;
-  cursor: pointer;
   overflow: hidden;
-  transition: transform .2s, box-shadow .2s;
-  box-shadow: 0 4px 20px rgba(88,166,255,.3);
 }
-.btn-primary::after {
+.hero::before {
   content: '';
   position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,.15) 50%, transparent 100%);
-  transform: translateX(-100%);
-  transition: transform .5s;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--green), var(--blue-l));
 }
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(88,166,255,.4); }
-.btn-primary:hover::after { transform: translateX(100%); }
-.btn-primary:active { transform: translateY(0); }
 
-.btn-secondary {
+.hero-icon {
+  font-size: 48px;
+  margin-bottom: 18px;
+  display: block;
+  animation: bob 3s ease-in-out infinite;
+}
+@keyframes bob {
+  0%,100% { transform: translateY(0); }
+  50%      { transform: translateY(-6px); }
+}
+
+.hero h1 {
+  font-size: clamp(22px, 4.5vw, 30px);
+  font-weight: 800;
+  color: var(--tx);
+  line-height: 1.25;
+  margin-bottom: 14px;
+}
+.hero h1 em {
+  font-style: normal;
+  color: var(--green);
+}
+
+.hero p {
+  color: var(--tx2);
+  font-size: 15px;
+  line-height: 1.75;
+  max-width: 440px;
+  margin: 0 auto 28px;
+}
+
+.hero-chips {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+.chip {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
+  background: var(--off);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 5px 13px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--tx2);
+}
+
+/* ── BUTTONS ── */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  font: 600 15px 'Inter', sans-serif;
+  border: none;
+  border-radius: 100px;
+  cursor: pointer;
+  transition: transform .18s, box-shadow .18s, background .18s;
+  text-decoration: none;
+}
+.btn:active { transform: scale(.97); }
+
+.btn-green {
+  background: var(--green);
+  color: #fff;
+  padding: 14px 32px;
+  box-shadow: 0 4px 14px rgba(22,163,74,.3);
+}
+.btn-green:hover {
+  background: #15803d;
+  box-shadow: 0 6px 20px rgba(22,163,74,.4);
+  transform: translateY(-1px);
+}
+
+.btn-blue {
+  background: var(--blue);
+  color: #fff;
+  padding: 14px 32px;
+  box-shadow: 0 4px 14px rgba(37,99,235,.25);
+}
+.btn-blue:hover {
+  background: #1d4ed8;
+  box-shadow: 0 6px 20px rgba(37,99,235,.35);
+  transform: translateY(-1px);
+}
+
+.btn-ghost {
   background: transparent;
   color: var(--tx2);
-  border: 1px solid var(--border2);
-  border-radius: 100px;
+  border: 1.5px solid var(--border2);
   padding: 12px 22px;
-  font: 500 14px 'Inter', sans-serif;
-  cursor: pointer;
-  transition: all .2s;
+  font-size: 14px;
 }
-.btn-secondary:hover { border-color: var(--ac); color: var(--ac); background: rgba(88,166,255,.06); }
+.btn-ghost:hover {
+  border-color: var(--green);
+  color: var(--green);
+  background: var(--green-bg);
+}
 
-.btn-small {
-  background: rgba(88,166,255,.1);
-  border: 1px solid rgba(88,166,255,.2);
-  color: var(--ac2);
+.btn-pill {
+  background: var(--blue-bg);
+  border: 1px solid var(--blue-mid);
+  color: var(--blue);
   border-radius: 8px;
   padding: 5px 12px;
   font: 500 12px 'Inter', sans-serif;
   cursor: pointer;
-  transition: all .18s;
+  transition: all .15s;
   white-space: nowrap;
 }
-.btn-small:hover { background: rgba(88,166,255,.2); border-color: var(--ac); }
+.btn-pill:hover { background: var(--blue-mid); }
 
-/* ── SECTION HEADER ─────────────────────────────────── */
-.section-header {
-  margin-bottom: 24px;
-}
-.section-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 11px;
-  font-weight: 700;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: var(--tx3);
-  margin-bottom: 8px;
-}
-.section-label::before {
-  content: '';
-  display: inline-block;
-  width: 16px;
-  height: 2px;
-  background: var(--acg);
-  border-radius: 2px;
-}
-.section-header h1 {
-  font-size: clamp(20px, 4vw, 26px);
-  font-weight: 700;
-  color: var(--tx);
-  line-height: 1.3;
-}
-
-/* ── PROGRESS ───────────────────────────────────────── */
-.progress-wrap {
+/* ═══════════════════════════════════════
+   PROGRESS
+═══════════════════════════════════════ */
+.progress-area {
   margin-bottom: 28px;
 }
-.progress-steps {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  margin-bottom: 12px;
-}
-.progress-step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  flex: 1;
-  position: relative;
-}
-.progress-step:not(:last-child)::after {
-  content: '';
-  position: absolute;
-  top: 14px;
-  left: 50%;
-  width: 100%;
-  height: 2px;
-  background: var(--border);
-  z-index: 0;
-  transition: background .4s;
-}
-.progress-step.done:not(:last-child)::after { background: var(--ac); }
-.step-dot {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 2px solid var(--border);
-  background: var(--surface);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 11px;
-  font-weight: 700;
-  color: var(--tx3);
-  position: relative;
-  z-index: 1;
-  transition: all .3s;
-}
-.progress-step.active .step-dot {
-  border-color: var(--ac);
-  background: rgba(88,166,255,.15);
-  color: var(--ac);
-  box-shadow: var(--glow);
-}
-.progress-step.done .step-dot {
-  border-color: var(--ok);
-  background: rgba(63,185,80,.15);
-  color: var(--ok);
-}
-.step-label {
-  font-size: 10px;
-  color: var(--tx3);
-  margin-top: 5px;
-  text-align: center;
-  transition: color .3s;
-  white-space: nowrap;
-}
-.progress-step.active .step-label { color: var(--ac); font-weight: 600; }
-.progress-step.done .step-label { color: var(--ok); }
 
-.progress-bar-outer {
-  height: 4px;
+.step-labels {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.step-labels span {
+  font-size: 11.5px;
+  font-weight: 600;
+  color: var(--tx3);
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  flex: 1;
+  text-align: center;
+}
+.step-labels span.active { color: var(--green); }
+.step-labels span.done   { color: var(--blue); }
+
+.prog-track {
+  height: 6px;
   background: var(--border);
-  border-radius: 4px;
+  border-radius: 6px;
   overflow: hidden;
 }
-.progress-bar-inner {
+.prog-fill {
   height: 100%;
-  background: var(--acg);
-  border-radius: 4px;
+  background: linear-gradient(90deg, var(--green), var(--blue-l));
+  border-radius: 6px;
   transition: width .5s cubic-bezier(.4,0,.2,1);
-  position: relative;
 }
-.progress-bar-inner::after {
-  content: '';
-  position: absolute;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 60px;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,.4));
-  animation: shimmer 1.5s infinite;
-}
-@keyframes shimmer { from { opacity: 0; } 50% { opacity: 1; } to { opacity: 0; } }
 
-/* ── QUESTION CARD ──────────────────────────────────── */
+.prog-dots {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 6px;
+}
+.prog-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--border);
+  transition: background .3s;
+}
+.prog-dot.active { background: var(--green); }
+.prog-dot.done   { background: var(--blue-l); }
+
+/* ═══════════════════════════════════════
+   QUESTION CARD
+═══════════════════════════════════════ */
 .q-card {
-  background: var(--card);
-  border: 1px solid var(--border);
+  background: var(--white);
+  border: 1.5px solid var(--border);
   border-radius: var(--r);
-  padding: 20px;
+  padding: 22px 20px;
   margin-bottom: 14px;
+  box-shadow: var(--shadow-sm);
   transition: border-color .2s, box-shadow .2s;
-  animation: cardIn .3s ease both;
 }
 .q-card:focus-within {
-  border-color: var(--border2);
-  box-shadow: var(--shadow2);
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(22,163,74,.08), var(--shadow-sm);
 }
-@keyframes cardIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to   { opacity: 1; transform: none; }
+.q-card[data-answered="true"] {
+  border-color: #bbf7d0;
+  background: linear-gradient(180deg, #fff 0%, #f0fdf4 100%);
 }
 
 .q-label {
   font-size: 15px;
   font-weight: 600;
   color: var(--tx);
-  margin-bottom: 14px;
-  line-height: 1.45;
-  display: flex;
-  gap: 6px;
+  margin-bottom: 16px;
+  line-height: 1.5;
 }
-.q-label .req-dot {
-  color: var(--ac);
-  font-weight: 800;
-  flex-shrink: 0;
-}
+.q-label .req { color: var(--green); margin-left: 2px; }
 
-/* ── RADIO / CHECKBOX OPTIONS ───────────────────────── */
-.opt-list { display: flex; flex-direction: column; gap: 6px; }
+/* ── OPTIONS ── */
+.opt-list { display: flex; flex-direction: column; gap: 7px; }
 
-.opt-label {
+.opt-row {
   display: flex;
   align-items: center;
   gap: 12px;
   padding: 11px 14px;
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--border);
   border-radius: var(--r2);
   cursor: pointer;
-  transition: all .18s;
-  background: var(--card2);
-  position: relative;
-  overflow: hidden;
+  background: var(--white);
+  transition: all .16s;
+  user-select: none;
 }
-.opt-label:hover {
-  border-color: var(--border2);
-  background: rgba(88,166,255,.05);
+.opt-row:hover {
+  border-color: var(--green);
+  background: var(--green-bg);
 }
-.opt-label input { display: none; }
+.opt-row input { display: none; }
 
-.opt-indicator {
-  width: 18px;
-  height: 18px;
+/* custom dot/check */
+.opt-circle {
+  width: 19px; height: 19px;
   border-radius: 50%;
   border: 2px solid var(--border2);
   flex-shrink: 0;
-  position: relative;
-  transition: all .18s;
-  background: transparent;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .16s;
+  background: #fff;
 }
-.opt-indicator.sq { border-radius: 5px; }
+.opt-circle.sq { border-radius: 5px; }
 
-.opt-label input:checked ~ .opt-indicator {
-  border-color: var(--ac);
-  background: var(--ac);
+.opt-row:has(input:checked) .opt-circle {
+  border-color: var(--green);
+  background: var(--green);
 }
-.opt-label input:checked ~ .opt-indicator::after {
+.opt-row:has(input:checked) .opt-circle::after {
   content: '';
-  position: absolute;
-  top: 50%; left: 50%;
-  transform: translate(-50%,-50%) scale(1);
-  width: 6px; height: 6px;
+  display: block;
+}
+/* radio dot */
+.opt-circle:not(.sq)::after {
+  width: 7px; height: 7px;
   background: #fff;
   border-radius: 50%;
+  opacity: 0;
+  transition: opacity .16s;
 }
-.opt-indicator.sq::after {
-  width: 9px !important; height: 7px !important;
-  border-radius: 0 !important;
-  background: transparent !important;
+.opt-row:has(input:checked) .opt-circle:not(.sq)::after { opacity: 1; }
+
+/* checkbox tick */
+.opt-circle.sq::after {
+  width: 10px; height: 7px;
+  border-left: 2px solid #fff;
   border-bottom: 2px solid #fff;
-  border-right: 2px solid #fff;
-  transform: translate(-50%,-60%) rotate(45deg) !important;
-  top: 50%; left: 50%;
+  transform: rotate(-45deg) translateY(-1px);
+  opacity: 0;
+  transition: opacity .16s;
+}
+.opt-row:has(input:checked) .opt-circle.sq::after { opacity: 1; }
+
+.opt-row:has(input:checked) {
+  border-color: var(--green);
+  background: var(--green-bg);
 }
 
 .opt-text {
   font-size: 14px;
   color: var(--tx2);
-  transition: color .18s;
   line-height: 1.4;
+  flex: 1;
+  transition: color .16s;
 }
-.opt-label input:checked ~ .opt-indicator + .opt-text,
-.opt-label:has(input:checked) .opt-text {
+.opt-row:has(input:checked) .opt-text {
   color: var(--tx);
   font-weight: 500;
 }
-.opt-label:has(input:checked) {
-  border-color: var(--ac);
-  background: rgba(88,166,255,.08);
-}
-.opt-label:has(input:checked)::before {
-  content: '';
-  position: absolute;
-  left: 0; top: 0; bottom: 0;
-  width: 3px;
-  background: var(--acg);
-  border-radius: 3px 0 0 3px;
-}
 
-/* ── TEXT INPUT ─────────────────────────────────────── */
-.text-input {
+/* ── TEXT INPUT ── */
+.text-inp {
   width: 100%;
   padding: 12px 14px;
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--border);
   border-radius: var(--r2);
-  background: var(--card2);
+  background: var(--white);
   color: var(--tx);
   font: 14px 'Inter', sans-serif;
-  transition: border-color .2s, box-shadow .2s;
   outline: none;
+  transition: border-color .2s, box-shadow .2s;
 }
-.text-input::placeholder { color: var(--tx3); }
-.text-input:focus {
-  border-color: var(--ac);
-  box-shadow: 0 0 0 3px rgba(88,166,255,.12);
+.text-inp::placeholder { color: var(--tx3); }
+.text-inp:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(22,163,74,.1);
 }
 
-/* ── SWITCH PILLS ───────────────────────────────────── */
-.switch-row {
+/* ── SWITCH ROW ── */
+.switch-note {
+  background: var(--blue-bg);
+  border: 1px solid var(--blue-mid);
+  border-radius: var(--r2);
+  padding: 12px 16px;
+  margin-bottom: 20px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   flex-wrap: wrap;
-  margin-top: 6px;
-  padding: 14px 16px;
-  background: rgba(88,166,255,.04);
-  border: 1px solid rgba(88,166,255,.1);
-  border-radius: var(--r2);
 }
-.switch-row p {
+.switch-note p {
   font-size: 13px;
-  color: var(--tx3);
-  margin: 0;
+  color: var(--tx2);
   flex: 1;
   min-width: 160px;
+  margin: 0;
 }
 
-/* ── FORM ACTIONS ───────────────────────────────────── */
-.form-actions {
+/* ── FORM FOOTER ── */
+.form-footer {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  margin-top: 20px;
+  align-items: center;
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border);
 }
 
-/* ── ERROR ──────────────────────────────────────────── */
-.error-msg {
-  display: flex;
+.error-banner {
+  width: 100%;
+  display: none;
   align-items: center;
   gap: 8px;
+  padding: 10px 14px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
   color: var(--err);
   font-size: 13px;
   font-weight: 500;
-  padding: 10px 14px;
-  background: rgba(248,81,73,.08);
-  border: 1px solid rgba(248,81,73,.2);
-  border-radius: 8px;
-  margin: 12px 0;
-  display: none;
 }
-.error-msg.visible { display: flex; }
+.error-banner.show { display: flex; }
 
-/* ── SAVING SCREEN ──────────────────────────────────── */
-.saving-screen {
+/* ── SECTION HEADER ── */
+.section-head {
+  margin-bottom: 24px;
+}
+.eyebrow {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: .09em;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.eyebrow::before {
+  content: '';
+  display: inline-block;
+  width: 18px; height: 2.5px;
+  background: var(--green);
+  border-radius: 2px;
+}
+.section-head h1 {
+  font-size: clamp(19px, 3.5vw, 24px);
+  font-weight: 700;
+  color: var(--tx);
+  line-height: 1.3;
+}
+
+/* ── SAVING ── */
+.saving-wrap {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-height: 50vh;
+  min-height: 55vh;
+  gap: 18px;
   text-align: center;
-  gap: 20px;
 }
-.spinner {
-  width: 44px; height: 44px;
+.ring {
+  width: 48px; height: 48px;
   border: 3px solid var(--border);
-  border-top-color: var(--ac);
+  border-top-color: var(--green);
   border-radius: 50%;
-  animation: spin .8s linear infinite;
+  animation: spin .75s linear infinite;
 }
 @keyframes spin { to { transform: rotate(360deg); } }
+.saving-wrap p { color: var(--tx2); font-size: 15px; font-weight: 500; }
 
-/* ── THANK YOU SCREEN ───────────────────────────────── */
-.thankyou {
+/* ── THANK YOU ── */
+.ty-wrap {
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 52px 32px 44px;
+  box-shadow: var(--shadow-lg);
   text-align: center;
-  padding: 60px 20px;
+  position: relative;
+  overflow: hidden;
 }
-.thankyou-icon {
-  width: 72px; height: 72px;
-  background: linear-gradient(135deg,rgba(63,185,80,.2),rgba(63,185,80,.05));
-  border: 2px solid rgba(63,185,80,.4);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 32px;
-  margin: 0 auto 24px;
-  animation: popIn .5s cubic-bezier(.22,.68,0,1.6) .1s both;
+.ty-wrap::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--green), var(--blue-l));
+}
+.ty-icon {
+  font-size: 52px;
+  display: block;
+  margin-bottom: 20px;
+  animation: popIn .5s cubic-bezier(.34,1.56,.64,1) both;
 }
 @keyframes popIn {
-  from { transform: scale(0); opacity: 0; }
-  to   { transform: scale(1); opacity: 1; }
+  from { transform: scale(0) rotate(-15deg); opacity: 0; }
+  to   { transform: scale(1) rotate(0); opacity: 1; }
 }
-.thankyou h1 {
-  font-size: 32px;
+.ty-wrap h1 {
+  font-size: 28px;
   font-weight: 800;
-  background: var(--acg2);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--tx);
   margin-bottom: 12px;
 }
-.thankyou .ok-msg {
+.ty-ok {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  color: var(--ok);
+  gap: 7px;
+  background: var(--green-mid);
+  border: 1px solid #86efac;
+  color: #15803d;
   font-size: 14px;
   font-weight: 600;
-  background: rgba(63,185,80,.1);
-  border: 1px solid rgba(63,185,80,.25);
-  padding: 10px 20px;
+  padding: 9px 20px;
   border-radius: 100px;
   margin-bottom: 20px;
 }
-.thankyou p {
+.ty-wrap > p {
   color: var(--tx2);
   font-size: 15px;
-  max-width: 400px;
+  max-width: 380px;
   margin: 0 auto;
+  line-height: 1.7;
 }
 
-/* fallback copy area */
 pre {
   white-space: pre-wrap;
-  background: var(--card);
+  background: var(--off);
   border: 1px solid var(--border);
   border-radius: var(--r2);
   padding: 14px;
-  font-size: 13px;
+  font-size: 12.5px;
   color: var(--tx2);
   text-align: left;
-  margin: 20px 0;
-  font-family: 'SF Mono', 'Fira Code', monospace;
+  margin: 18px 0;
+  font-family: ui-monospace, monospace;
 }
 
-/* ── RESPONSIVE ─────────────────────────────────────── */
 @media (max-width: 480px) {
+  .hero { padding: 36px 22px 32px; }
+  .ty-wrap { padding: 40px 20px 32px; }
   #app { padding: 20px 14px 60px; }
-  .hero { padding: 40px 0 28px; }
-  .hero-stats { gap: 20px; }
-  .progress-steps { gap: 0; }
-  .step-label { font-size: 9px; }
 }
 </style>
 </head>
 <body>
 <main id="app"></main>
-
 <script>
-/* ── DATA ──────────────────────────────────────────────────── */
+/* ── DATA ─────────────────────────────────────── */
 const COMMON=[
  {id:"invested",h:"H4",t:"Have you ever invested in stocks or mutual funds?",k:"single",o:["Never, but I want to start","Tried once or twice","I invest occasionally","I invest regularly"],req:1},
- {id:"goal",h:"H8, H9",t:"What do you mainly want from company research?",k:"single",o:["Judge the right time and price to buy","Broaden my perspective beyond what I already follow"],req:1,showIf:a=>a.invested&&a.invested!=="Never, but I want to start"},
- {id:"where",h:"H1, H2",t:"Where do you get information about companies and investing today? (tick all that apply)",k:"multi",o:["YouTube or Instagram","Friends or family","Telegram or WhatsApp groups","Broker or analyst reports","Company annual reports","ChatGPT or other AI","Nowhere yet"]},
+ {id:"goal",h:"H8,H9",t:"What do you mainly want from company research?",k:"single",o:["Judge the right time and price to buy","Broaden my perspective beyond what I already follow"],req:1,showIf:a=>a.invested&&a.invested!=="Never, but I want to start"},
+ {id:"where",h:"H1,H2",t:"Where do you get information about companies and investing today? (tick all that apply)",k:"multi",o:["YouTube or Instagram","Friends or family","Telegram or WhatsApp groups","Broker or analyst reports","Company annual reports","ChatGPT or other AI","Nowhere yet"]},
  {id:"report",h:"H2",t:"Have you ever opened a company's annual report or a research report?",k:"single",o:["Never","Opened one, couldn't understand it","Read some parts","I read them regularly"]},
- {id:"diff",h:"H2, H3",t:"What is your biggest difficulty with company information?",k:"single",o:["Jargon, I don't understand it","It's too long","I don't know what to look for","I can't tell if it's reliable or biased","I don't find it difficult"]},
+ {id:"diff",h:"H2,H3",t:"What is your biggest difficulty with company information?",k:"single",o:["Jargon, I don't understand it","It's too long","I don't know what to look for","I can't tell if it's reliable or biased","I don't find it difficult"]},
  {id:"learnpref",h:"H5",t:"To understand a company report, which would you prefer?",k:"single",o:["Read it on my own","A video where an industry professional walks me through it","A short AI summary","The report plus an expert video, with help when I'm stuck"]},
  {id:"video",h:"H6",t:"Would a video walkthrough by an industry professional make you more likely to read the actual report?",k:"single",o:["Yes, much more","Somewhat","No, I'd just watch the video","No, I'd rather read directly"]}
 ];
@@ -614,293 +566,241 @@ const SHARED=[
  {id:"aistuck",h:"H7",t:"When you're stuck on a report, what do you do today? (tick all that apply)",k:"multi",o:["Ask a friend or family","Search Google or YouTube","Ask ChatGPT or other AI","Ask an adviser","Skip it and move on"]}
 ];
 const PRICE=[
- {id:"spend",h:"H10, H11",t:"Today, how much do you spend per month on investing tools, courses or paid advice?",k:"single",o:["Nothing","Under ₹500","₹500-2,000","Over ₹2,000"]},
+ {id:"spend",h:"H10,H11",t:"Today, how much do you spend per month on investing tools, courses or paid advice?",k:"single",o:["Nothing","Under ₹500","₹500–2,000","Over ₹2,000"]},
  {id:"price",h:"H10",t:"Which monthly price would you actually pay for a platform like this (not just say)?",k:"single",o:["Nothing, only if free","₹99","₹199","₹299","₹499","More than ₹499"],req:1},
  {id:"start",h:"H12",t:"How would you start?",k:"single",o:["Free first, upgrade if it helps me","Pay right away if it looks good","Only if fully free"]},
  {id:"wait",h:"H10",t:"The platform is not built yet. Want to be on the early-access list?",k:"single",o:["Yes","Maybe","No"],req:1},
- {id:"contact",t:"Optional: WhatsApp number or email for early access and a 10-minute chat.",k:"line"}
+ {id:"contact",t:"Optional — WhatsApp number or email (for early access + a quick 10-min chat).",k:"line"}
 ];
 const CATS={
  beginner:{name:"Beginner",icon:"🌱",line:"you haven't invested yet and the technical side is holding you back",
-  qs:[{id:"b_stop",h:"H4",t:"What is the MAIN thing holding you back?",k:"single",o:["The terms and jargon confuse me","I don't know how to read information about a company","I don't know how to choose which company","I'm afraid of losing money by misjudging","I don't know how to open or use an account","I have no one to ask"]},
-      {id:"b_explain",h:"H4",t:"If you opened a company report, what would you most need explained? (tick all that apply)",k:"multi",o:["Financial terms","Profit and loss numbers","Whether the company is actually good","The risks","How it compares to other companies"]},
-      {id:"b_ready",h:"H4, H7",t:"What would make you confident enough to make your first investment?",k:"single",o:["Understanding a company's report myself","Following a step-by-step learning path","Starting with a very small amount","Advice from someone I trust","Seeing others' results"]},
-      {id:"b_way",h:"H5, H7",t:"How would you prefer to learn?",k:"single",o:["The report plus an expert video, step by step","Asking an AI whenever I'm stuck","Short daily lessons","Someone just telling me what to buy"]},
-      {id:"b_course",h:"H7",t:"Have you ever started an investing course or video series?",k:"single",o:["Finished it","Started but didn't finish","Never started one"]},
-      {id:"b_ai",h:"H7",t:"If you got stuck on a report, what would you want from an AI companion? (tick all that apply)",k:"multi",o:["Explain terms in simple language","Show the page in the report it is based on","Say when it is unsure","Point me back to the right part of the report","I'd rather ask a person"]},
-      {id:"b_take",h:"H8",t:"After an expert explains a report, what would you rather get?",k:"single",o:["One clear verdict","Several takeaways (bull view, bear view, risks) so I decide","Both"]}]},
- seeker:{name:"Timing / Price Seeker",icon:"📈",line:"you invest and want to judge the right time and price",
-  qs:[{id:"s_rely",h:"H8",t:"To judge whether a price is right, what do you rely on today? (tick all that apply)",k:"multi",o:["Tips or news","Charts","Valuation ratios (like P/E)","Analyst target prices","Gut feeling","An adviser's call"]},
-      {id:"s_pick",h:"H8",t:"Which would you actually use?",k:"single",o:["A target price from an analyst","A tool showing how analysts reached their price, where I can change the assumptions","Both","Neither"]},
-      {id:"s_call",h:"H8",t:"If a platform never said 'buy' or 'sell' but taught you to judge price yourself, would that be enough?",k:"single",o:["Yes, enough","I'd still want a clear call","Depends"]},...SHARED]},
+  qs:[
+   {id:"b_stop",h:"H4",t:"What's the main thing holding you back right now?",k:"single",o:["The terms and jargon confuse me","I don't know how to read company information","I don't know how to choose which company","I'm afraid of losing money by misjudging","I don't know how to open or use an account","I have no one to ask"]},
+   {id:"b_explain",h:"H4",t:"If you opened a company report, what would you most need explained? (tick all that apply)",k:"multi",o:["Financial terms","Profit and loss numbers","Whether the company is actually good","The risks","How it compares to other companies"]},
+   {id:"b_ready",h:"H4,H7",t:"What would make you confident enough to make your first investment?",k:"single",o:["Understanding a company's report myself","Following a step-by-step learning path","Starting with a very small amount","Advice from someone I trust","Seeing others' results"]},
+   {id:"b_way",h:"H5,H7",t:"How would you prefer to learn?",k:"single",o:["The report plus an expert video, step by step","Asking an AI whenever I'm stuck","Short daily lessons","Someone just telling me what to buy"]},
+   {id:"b_course",h:"H7",t:"Have you ever started an investing course or video series?",k:"single",o:["Yes, and I finished it","Started but didn't finish","Never started one"]},
+   {id:"b_ai",h:"H7",t:"If you got stuck on a report, what would you want from an AI? (tick all that apply)",k:"multi",o:["Explain terms in plain language","Point to the right page in the report","Tell me when it's not sure","I'd rather ask a person"]},
+   {id:"b_take",h:"H8",t:"After an expert explains a report, what would you rather receive?",k:"single",o:["One clear verdict","Several takeaways (bull, bear, risks) so I decide","Both"]}
+  ]},
+ seeker:{name:"Timing & Price Seeker",icon:"📈",line:"you invest and want to judge the right time and price",
+  qs:[
+   {id:"s_rely",h:"H8",t:"To judge whether a price is right, what do you rely on today? (tick all that apply)",k:"multi",o:["Tips or news","Charts","Valuation ratios (like P/E)","Analyst target prices","Gut feeling","An adviser's call"]},
+   {id:"s_pick",h:"H8",t:"Which would you actually use?",k:"single",o:["A target price from an analyst","A tool showing how analysts reached their price, where I can tweak the assumptions","Both","Neither"]},
+   {id:"s_call",h:"H8",t:"If a platform never said 'buy' or 'sell' but helped you judge price yourself — would that be enough?",k:"single",o:["Yes, that's enough","I'd still want a clear call","Depends"]},...SHARED
+  ]},
  seasoned:{name:"Seasoned Investor",icon:"🏆",line:"you're experienced and want to broaden your perspective",
-  qs:[{id:"e_sector",h:"H9",t:"In the last month, how many reports from sectors outside your usual ones did you read?",k:"single",o:["None","1-2","3-5","6 or more"]},
-      {id:"e_bear",h:"H9",t:"How often do you read a strong bear case against a stock you own?",k:"single",o:["Never","Rarely","Sometimes","Always"]},
-      {id:"e_weekly",h:"H9",t:"Would you check a bull-vs-bear comparison of reports every week?",k:"single",o:["Yes, weekly","Occasionally","No"]},...SHARED]}
+  qs:[
+   {id:"e_sector",h:"H9",t:"In the last month, how many reports from sectors outside your usual ones did you read?",k:"single",o:["None","1–2","3–5","6 or more"]},
+   {id:"e_bear",h:"H9",t:"How often do you seek out a strong bear case against a stock you own?",k:"single",o:["Never","Rarely","Sometimes","Always"]},
+   {id:"e_weekly",h:"H9",t:"Would you check a bull-vs-bear comparison of reports every week?",k:"single",o:["Yes, every week","Occasionally","Probably not"]},...SHARED
+  ]}
 };
 
 const HT={};
 [...COMMON,...SHARED,...PRICE,...Object.values(CATS).flatMap(c=>c.qs)].forEach(q=>{if(q.h)HT[q.id]=q.h});
 
-const app = document.getElementById("app");
-let cat = null, ans = {};
+const app=document.getElementById("app");
+let cat=null,ans={};
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const routeCat=a=>a.invested==="Never, but I want to start"?"beginner":(a.goal&&a.goal.startsWith("Judge")?"seeker":"seasoned");
 
-const esc = s => String(s??"").replace(/[&<>"]/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
-const routeCat = a => a.invested==="Never, but I want to start" ? "beginner" : (a.goal&&a.goal.startsWith("Judge") ? "seeker" : "seasoned");
+/* ── ENDPOINT ─────────────────────────────────── */
+const ENDPOINT="https://script.google.com/macros/s/AKfycbxA6hIv1d-LwbaIFtbNQp4Fwcnrd7qp531MQIAeiPezfIFkPgsiSKIhL_bdD0YFvZRj/exec";
 
-/* ── ENDPOINT ──────────────────────────────────────────────── */
-const ENDPOINT = "https://script.google.com/macros/s/AKfycbxA6hIv1d-LwbaIFtbNQp4Fwcnrd7qp531MQIAeiPezfIFkPgsiSKIhL_bdD0YFvZRj/exec";
-
-/* ── SAVE ──────────────────────────────────────────────────── */
-async function save(rec) {
-  if (!ENDPOINT) return false;
-  try {
-    await fetch(ENDPOINT, {
-      method: "POST",
-      mode: "no-cors",
-      headers: { "Content-Type": "text/plain" },
-      body: JSON.stringify(rec),
-    });
+/* ── SAVE ─────────────────────────────────────── */
+async function save(rec){
+  if(!ENDPOINT)return false;
+  try{
+    await fetch(ENDPOINT,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain"},body:JSON.stringify(rec)});
     return true;
-  } catch(e) { return false; }
+  }catch(e){return false;}
 }
 
-/* ── RENDER HELPERS ────────────────────────────────────────── */
-function enter() {
-  app.querySelector('.page-enter') || app.firstElementChild?.classList.add('page-enter');
-  // Apply to wrapper div
-  const w = app.firstElementChild;
-  if (w) { w.classList.remove('page-enter'); void w.offsetWidth; w.classList.add('page-enter'); }
-}
+/* ── RENDER ───────────────────────────────────── */
+function set(html){ app.innerHTML=`<div class="page">${html}</div>`; }
 
-function progressHTML(step, pct) {
-  const labels = ["About you","Your experience","Pricing"];
+function progHTML(step,pct){
+  const labs=["About you","Your experience","Pricing"];
   return `
-  <div class="progress-wrap">
-    <div class="progress-steps">
-      ${[0,1,2].map(i=>`
-        <div class="progress-step ${i<step?'done':i===step?'active':''}">
-          <div class="step-dot">${i<step?'✓':(i+1)}</div>
-          <div class="step-label">${labels[i]}</div>
-        </div>`).join('')}
+  <div class="progress-area">
+    <div class="step-labels">
+      ${labs.map((l,i)=>`<span class="${i<step?'done':i===step?'active':''}">${l}</span>`).join('')}
     </div>
-    <div class="progress-bar-outer">
-      <div class="progress-bar-inner" id="pb" style="width:${pct}%"></div>
+    <div class="prog-track"><div class="prog-fill" id="pb" style="width:${pct}%"></div></div>
+    <div class="prog-dots">
+      ${[0,1,2].map(i=>`<div class="prog-dot ${i<step?'done':i===step?'active':''}"></div>`).join('')}
     </div>
   </div>`;
 }
 
-function fieldHTML(q) {
-  const label = `<div class="q-label">${esc(q.t)}${q.req?'<span class="req-dot">*</span>':''}</div>`;
-  if (q.k === "line") return `
-    <div class="q-card" data-id="${q.id}">
-      ${label}
-      <input class="text-input" type="text" name="${q.id}" placeholder="Type here…">
-    </div>`;
-  const type = q.k === "multi" ? "checkbox" : "radio";
-  const ind = type === "checkbox" ? "sq" : "";
-  return `
-    <div class="q-card" data-id="${q.id}">
-      ${label}
-      <div class="opt-list">
-        ${q.o.map(o=>`
-          <label class="opt-label">
-            <input type="${type}" name="${q.id}" value="${esc(o)}">
-            <div class="opt-indicator ${ind}"></div>
-            <span class="opt-text">${esc(o)}</span>
-          </label>`).join('')}
-      </div>
-    </div>`;
+function fieldHTML(q){
+  const label=`<div class="q-label">${esc(q.t)}${q.req?'<span class="req">*</span>':''}</div>`;
+  if(q.k==="line")return `<div class="q-card" data-id="${q.id}">${label}<input class="text-inp" type="text" name="${q.id}" placeholder="Type here…"></div>`;
+  const type=q.k==="multi"?"checkbox":"radio";
+  const cls=type==="checkbox"?" sq":"";
+  return `<div class="q-card" data-id="${q.id}">${label}<div class="opt-list">
+    ${q.o.map(o=>`<label class="opt-row"><input type="${type}" name="${q.id}" value="${esc(o)}">
+      <div class="opt-circle${cls}"></div><span class="opt-text">${esc(o)}</span></label>`).join('')}
+  </div></div>`;
 }
 
-/* ── PAGE RENDERER ─────────────────────────────────────────── */
-function page({title, sublabel="", note="", list, step, pct=0, label, onBack, onNext}) {
-  app.innerHTML = `<div class="page-enter">
-    <div class="section-header">
-      <div class="section-label">${sublabel||(['Step 1 of 3','Step 2 of 3','Step 3 of 3'][step]||'')}</div>
+function page({eyebrow,title,note="",list,step,label,onBack,onNext}){
+  set(`
+    <div class="section-head">
+      <div class="eyebrow">${eyebrow}</div>
       <h1>${title}</h1>
     </div>
-    ${progressHTML(step, pct)}
+    ${progHTML(step,0)}
     ${note}
     <form id="f" novalidate>
       ${list.map(fieldHTML).join('')}
-      <div class="error-msg" id="err">⚠ Please answer the questions marked *.</div>
-      <div class="form-actions">
-        ${onBack?`<button type="button" class="btn-secondary" id="back">← Back</button>`:''}
-        <button type="submit" class="btn-primary">${label} →</button>
+      <div class="error-banner" id="err">⚠ Please answer all required questions (marked *).</div>
+      <div class="form-footer">
+        ${onBack?`<button type="button" class="btn btn-ghost" id="back">← Back</button>`:''}
+        <button type="submit" class="btn btn-green">${label}</button>
       </div>
-    </form>
-  </div>`;
+    </form>`);
 
-  const f = document.getElementById("f");
+  const f=document.getElementById("f");
 
-  // Restore saved answers
-  list.forEach(q => {
-    const v = ans[q.id];
-    if (v == null || v === "") return;
-    f.querySelectorAll(`[name=${q.id}]`).forEach(el => {
-      if (el.type === "checkbox") el.checked = v.includes(el.value);
-      else if (el.type === "radio") el.checked = el.value === v;
-      else el.value = v;
+  // restore
+  list.forEach(q=>{
+    const v=ans[q.id];if(v==null||v==="")return;
+    f.querySelectorAll(`[name=${q.id}]`).forEach(el=>{
+      if(el.type==="checkbox")el.checked=v.includes(el.value);
+      else if(el.type==="radio")el.checked=el.value===v;
+      else el.value=v;
     });
   });
 
-  const read = () => {
-    const o = {};
-    list.forEach(q => {
-      const els = f.querySelectorAll(`[name=${q.id}]`);
-      if (q.k === "multi") o[q.id] = [...els].filter(x=>x.checked).map(x=>x.value);
-      else if (q.k === "line") o[q.id] = els[0].value.trim();
-      else { const x = [...els].find(x=>x.checked); o[q.id] = x ? x.value : ""; }
+  const read=()=>{
+    const o={};
+    list.forEach(q=>{
+      const els=f.querySelectorAll(`[name=${q.id}]`);
+      if(q.k==="multi")o[q.id]=[...els].filter(x=>x.checked).map(x=>x.value);
+      else if(q.k==="line")o[q.id]=els[0].value.trim();
+      else{const x=[...els].find(x=>x.checked);o[q.id]=x?x.value:"";}
     });
     return o;
   };
 
-  const vis = q => !q.showIf || q.showIf({...ans, ...read()});
+  const vis=q=>!q.showIf||q.showIf({...ans,...read()});
 
-  const upd = () => {
-    const o = read();
-    let n = 0, m = 0;
-    list.forEach(q => {
-      const el = f.querySelector(`[data-id=${q.id}]`);
-      const v = vis(q);
-      el.style.display = v ? "" : "none";
-      if (v) { m++; if (Array.isArray(o[q.id]) ? o[q.id].length : o[q.id]) n++; }
+  const upd=()=>{
+    const o=read();let n=0,m=0;
+    list.forEach(q=>{
+      const el=f.querySelector(`[data-id=${q.id}]`);
+      const v=vis(q);el.style.display=v?"":"none";
+      if(v){
+        m++;
+        const filled=Array.isArray(o[q.id])?o[q.id].length:o[q.id];
+        if(filled)n++;
+        el.dataset.answered=filled?"true":"false";
+      }
     });
-    const newPct = Math.round(((step + (m ? n/m : 0)) / 3) * 100);
-    const bar = document.getElementById("pb");
-    if (bar) bar.style.width = newPct + "%";
+    const pct=Math.round(((step+(m?n/m:0))/3)*100);
+    const pb=document.getElementById("pb");
+    if(pb)pb.style.width=pct+"%";
   };
 
-  f.addEventListener("input", upd);
-  f.addEventListener("change", upd);
-  upd();
+  f.addEventListener("input",upd);f.addEventListener("change",upd);upd();
+  if(onBack)document.getElementById("back").onclick=onBack;
 
-  if (onBack) document.getElementById("back").onclick = onBack;
-
-  f.onsubmit = e => {
+  f.onsubmit=e=>{
     e.preventDefault();
-    const o = read();
-    const errEl = document.getElementById("err");
-    if (list.some(q => vis(q) && q.req && (Array.isArray(o[q.id]) ? !o[q.id].length : !o[q.id]))) {
-      errEl.classList.add('visible');
-      errEl.scrollIntoView({behavior:'smooth', block:'nearest'});
+    const o=read();
+    const errEl=document.getElementById("err");
+    if(list.some(q=>vis(q)&&q.req&&(Array.isArray(o[q.id])?!o[q.id].length:!o[q.id]))){
+      errEl.classList.add('show');
+      errEl.scrollIntoView({behavior:'smooth',block:'nearest'});
       return;
     }
-    errEl.classList.remove('visible');
-    list.forEach(q => { if (vis(q)) ans[q.id] = o[q.id]; else delete ans[q.id]; });
-    onNext();
-    scrollTo({top:0, behavior:'smooth'});
+    errEl.classList.remove('show');
+    list.forEach(q=>{if(vis(q))ans[q.id]=o[q.id];else delete ans[q.id];});
+    onNext();scrollTo({top:0,behavior:'smooth'});
   };
 }
 
-/* ── SCREENS ───────────────────────────────────────────────── */
-function landing() {
-  cat = null; ans = {};
-  app.innerHTML = `<div class="page-enter">
+/* ── SCREENS ──────────────────────────────────── */
+function landing(){
+  cat=null;ans={};
+  set(`
     <div class="hero">
-      <div class="hero-badge"><span>📊</span> Research Survey</div>
-      <h1>Help Shape the Future of Investor Education</h1>
-      <p>I'm building a tool that makes company reports accessible — through expert video walkthroughs and an AI assistant. Your honest experience (4 min, all taps) will directly shape what gets built.</p>
-      <div class="hero-stats">
-        <div class="stat"><strong>4 min</strong><span>To complete</span></div>
-        <div class="stat"><strong>3</strong><span>Short sections</span></div>
-        <div class="stat"><strong>100%</strong><span>Anonymous</span></div>
+      <span class="hero-icon">📊</span>
+      <h1>Help me build something <em>actually useful</em> for investors</h1>
+      <p>I'm a student working on a tool that makes company reports easy to understand — using expert video walkthroughs and an AI assistant. This survey takes about 4 minutes and your honest experience is all I need.</p>
+      <div class="hero-chips">
+        <span class="chip">⏱ 4 minutes</span>
+        <span class="chip">✅ No right answers</span>
+        <span class="chip">🔒 Responses are private</span>
       </div>
-      <button class="btn-primary" id="go" style="font-size:16px;padding:16px 40px">Start Survey →</button>
-    </div>
-  </div>`;
-  document.getElementById("go").onclick = () => { stageCommon(); };
+      <button class="btn btn-green" id="go" style="font-size:15px;padding:15px 36px">Let's go →</button>
+    </div>`);
+  document.getElementById("go").onclick=()=>{stageCommon();};
 }
 
-function stageCommon() {
+function stageCommon(){
   page({
-    title: "A few quick questions",
-    sublabel: "Step 1 of 3 · About You",
-    list: COMMON, step: 0,
-    label: "Next",
-    onBack: landing,
-    onNext: () => { cat = routeCat(ans); stageCat(); }
+    eyebrow:"Step 1 of 3",title:"A few quick questions",
+    list:COMMON,step:0,label:"Next →",
+    onBack:landing,
+    onNext:()=>{cat=routeCat(ans);stageCat();}
   });
 }
 
-function stageCat() {
-  const c = CATS[cat];
-  const switches = Object.entries(CATS).filter(([k])=>k!==cat).map(([k,v])=>
-    `<button type="button" class="btn-small sw" data-k="${k}">${v.icon} ${esc(v.name)}</button>`
-  ).join('');
-  const note = `
-    <div class="switch-row">
-      <p>Based on your answers: <strong>${c.icon} ${esc(c.name)}</strong>. Not quite right?</p>
-      ${switches}
-    </div>`;
+function stageCat(){
+  const c=CATS[cat];
+  const pills=Object.entries(CATS).filter(([k])=>k!==cat)
+    .map(([k,v])=>`<button type="button" class="btn-pill sw" data-k="${k}">${v.icon} ${esc(v.name)}</button>`).join('');
+  const note=`<div class="switch-note"><p>Showing questions for: <strong>${c.icon} ${esc(c.name)}</strong>. Not right?</p>${pills}</div>`;
   page({
-    title: `${c.icon} ${esc(c.name)}`,
-    sublabel: "Step 2 of 3 · Your Experience",
-    note, list: c.qs, step: 1,
-    label: "Next",
-    onBack: stageCommon,
-    onNext: stagePrice
+    eyebrow:"Step 2 of 3",title:`${c.icon} ${esc(c.name)}`,
+    note,list:c.qs,step:1,label:"Next →",
+    onBack:stageCommon,onNext:stagePrice
   });
-  app.querySelectorAll(".sw").forEach(b => b.onclick = () => { cat = b.dataset.k; stageCat(); scrollTo({top:0,behavior:'smooth'}); });
+  app.querySelectorAll(".sw").forEach(b=>b.onclick=()=>{cat=b.dataset.k;stageCat();scrollTo({top:0,behavior:'smooth'});});
 }
 
-function stagePrice() {
+function stagePrice(){
   page({
-    title: "Almost done!",
-    sublabel: "Step 3 of 3 · Pricing & Access",
-    list: PRICE, step: 2,
-    label: "Submit",
-    onBack: stageCat,
-    onNext: async () => {
-      app.innerHTML = `<div class="saving-screen page-enter">
-        <div class="spinner"></div>
-        <div>
-          <p style="font-weight:600;font-size:16px;margin-bottom:4px">Saving your response…</p>
-          <p style="color:var(--tx3);font-size:13px">This takes just a second</p>
-        </div>
-      </div>`;
-      const lists = [...COMMON, ...CATS[cat].qs, ...PRICE], a = {}, qs = {};
-      lists.forEach(q => { if (ans[q.id] != null) { a[q.id] = ans[q.id]; qs[q.id] = q.t; } });
-      const rec = { category: cat, time: new Date().toISOString(), answers: a, questions: qs };
-      done(rec, await save(rec));
+    eyebrow:"Step 3 of 3 · Almost done!",title:"Pricing & early access",
+    list:PRICE,step:2,label:"Submit survey",
+    onBack:stageCat,
+    onNext:async()=>{
+      set(`<div class="saving-wrap">
+        <div class="ring"></div>
+        <p>Saving your response…</p>
+      </div>`);
+      const lists=[...COMMON,...CATS[cat].qs,...PRICE],a={},qs={};
+      lists.forEach(q=>{if(ans[q.id]!=null){a[q.id]=ans[q.id];qs[q.id]=q.t;}});
+      const rec={category:cat,time:new Date().toISOString(),answers:a,questions:qs};
+      done(rec,await save(rec));
     }
   });
 }
 
-function done(rec, saved) {
-  const txt = `Survey response (${CATS[rec.category].name})\n` +
-    Object.entries(rec.answers).map(([k,v]) =>
-      `${rec.questions[k]}\n-> ${Array.isArray(v) ? v.join(", ") : v || "(skipped)"}`
-    ).join("\n\n");
-
-  app.innerHTML = `<div class="thankyou page-enter">
-    <div class="thankyou-icon">🎉</div>
-    <h1>Thank you!</h1>
+function done(rec,saved){
+  const txt=`Survey response (${CATS[rec.category].name})\n`+
+    Object.entries(rec.answers).map(([k,v])=>`${rec.questions[k]}\n→ ${Array.isArray(v)?v.join(", "):v||"(skipped)"}`).join("\n\n");
+  set(`<div class="ty-wrap">
+    <span class="ty-icon">🎉</span>
+    <h1>Thank you so much!</h1>
     ${saved
-      ? `<div class="ok-msg">✓ Response saved to Google Sheets</div>`
-      : `<p style="color:var(--err);margin-bottom:16px">Couldn't save automatically. Please copy and send your answers below.</p>
-         <pre id="t">${esc(txt)}</pre>
-         <button class="btn-primary" id="cp" style="margin:0 auto">Copy my answers</button>`
+      ?`<div class="ty-ok">✓ Response saved successfully</div>`
+      :`<p style="color:var(--err);margin-bottom:14px">Couldn't save automatically — please copy and send the text below.</p>
+        <pre id="t">${esc(txt)}</pre>
+        <button class="btn btn-blue" id="cp" style="margin:0 auto">Copy my answers</button>`
     }
-    <p style="margin-top:20px">Your input will directly shape what gets built. I genuinely appreciate your time. 🙏</p>
-  </div>`;
-
-  const b = document.getElementById("cp");
-  if (b) b.onclick = async () => {
-    try {
-      await navigator.clipboard.writeText(txt);
-      b.textContent = "Copied ✓";
-    } catch(e) {
-      const r = document.createRange();
-      r.selectNodeContents(document.getElementById("t"));
-      getSelection().removeAllRanges();
-      getSelection().addRange(r);
-    }
+    <p>Your input genuinely matters and will shape what gets built. I really appreciate you taking the time. 🙏</p>
+  </div>`);
+  const b=document.getElementById("cp");
+  if(b)b.onclick=async()=>{
+    try{await navigator.clipboard.writeText(txt);b.textContent="Copied ✓";}
+    catch(e){const r=document.createRange();r.selectNodeContents(document.getElementById("t"));getSelection().removeAllRanges();getSelection().addRange(r);}
   };
 }
 
-/* ── BOOT ──────────────────────────────────────────────────── */
 landing();
 </script>
 </body>
